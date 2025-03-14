@@ -1,4 +1,5 @@
 using JobFly.Data;
+using JobFly.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,7 @@ namespace JobFly
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,11 @@ namespace JobFly
                 app.UseHsts();
             }
 
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -45,6 +51,33 @@ namespace JobFly
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+                string[] roleNames = { "Admin", "Employer", "Employee" };
+
+                foreach (var roleName in roleNames)
+                {
+                    if (!await roleManager.RoleExistsAsync(roleName))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(roleName));
+                    }
+                }
+
+                var adminEmail = "admin@mail.com";
+                var adminUser = await userManager.FindByEmailAsync(adminEmail);
+                if (adminUser == null)
+                {
+                    var newAdmin = new ApplicationUser { UserName = adminEmail, Email = adminEmail, Name = "Admin", Surname = "Admin" };
+                    await userManager.CreateAsync(newAdmin, "Admin123!");
+                    await userManager.AddToRoleAsync(newAdmin, "Admin");
+                }
+            }
+
+
 
             app.Run();
         }

@@ -4,6 +4,7 @@ using JobFly.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobFly.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250313200847_UpdateUserInheritance")]
+    partial class UpdateUserInheritance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +53,7 @@ namespace JobFly.Data.Migrations
 
                     b.HasIndex("VacancyId");
 
-                    b.ToTable("Applications", (string)null);
+                    b.ToTable("Applications");
                 });
 
             modelBuilder.Entity("JobFly.Models.ApplicationUser", b =>
@@ -149,7 +152,7 @@ namespace JobFly.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("JobFly.Models.EmployeeTag", b =>
@@ -164,7 +167,7 @@ namespace JobFly.Data.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("EmployeeTags", (string)null);
+                    b.ToTable("EmployeeTags");
                 });
 
             modelBuilder.Entity("JobFly.Models.Tag", b =>
@@ -181,7 +184,7 @@ namespace JobFly.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("JobFly.Models.Vacancy", b =>
@@ -228,7 +231,7 @@ namespace JobFly.Data.Migrations
 
                     b.HasIndex("EmployerId");
 
-                    b.ToTable("Vacancies", (string)null);
+                    b.ToTable("Vacancies");
                 });
 
             modelBuilder.Entity("JobFly.Models.VacancyTag", b =>
@@ -243,7 +246,7 @@ namespace JobFly.Data.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("VacancyTags", (string)null);
+                    b.ToTable("VacancyTags");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

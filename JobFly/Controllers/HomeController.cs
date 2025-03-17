@@ -1,16 +1,20 @@
 using System.Diagnostics;
 using JobFly.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobFly.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager; // <-- Исправлено
+
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
+            _userManager = userManager;
         }
 
         public IActionResult Index()

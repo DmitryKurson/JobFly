@@ -2,6 +2,7 @@ using JobFly.Data;
 using JobFly.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JobFly
 {
@@ -11,19 +12,38 @@ namespace JobFly
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            // Подключение к БД
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // Настройка Identity
+            Console.WriteLine("Configuring Identity...");
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+     .AddRoles<IdentityRole>()
+     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            Console.WriteLine("Identity configured!");
+
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Выполняем миграции и создаем роли
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var dbContext = services.GetRequiredService<ApplicationDbContext>();
+                await ApplyMigrationsAsync(dbContext);
+                await SeedRolesAndAdminAsync(services);
+            }
+
+            // Настройка HTTP-запросов
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
@@ -31,55 +51,88 @@ namespace JobFly
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
-
             using (var scope = app.Services.CreateScope())
             {
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var services = scope.ServiceProvider;
 
-                string[] roleNames = { "Admin", "Employer", "Employee" };
-
-                foreach (var roleName in roleNames)
+                var userManager = services.GetService<UserManager<ApplicationUser>>();
+                if (userManager == null)
                 {
-                    if (!await roleManager.RoleExistsAsync(roleName))
-                    {
-                        await roleManager.CreateAsync(new IdentityRole(roleName));
-                    }
+                    throw new Exception("UserManager<ApplicationUser> не зарегистрирован в DI!");
                 }
+            }
+            app.Run();
+        }
 
-                var adminEmail = "admin@mail.com";
-                var adminUser = await userManager.FindByEmailAsync(adminEmail);
-                if (adminUser == null)
+        private static async Task ApplyMigrationsAsync(ApplicationDbContext dbContext)
+        {
+            Console.WriteLine("Applying migrations...");
+            await dbContext.Database.MigrateAsync();
+            Console.WriteLine("Migrations applied successfully!");
+        }
+
+        private static async Task SeedRolesAndAdminAsync(IServiceProvider services)
+        {
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+            string[] roleNames = { "Admin", "Employer", "Employee" };
+
+            foreach (var roleName in roleNames)
+            {
+                if (!await roleManager.RoleExistsAsync(roleName))
                 {
-                    var newAdmin = new ApplicationUser { UserName = adminEmail, Email = adminEmail, Name = "Admin", Surname = "Admin" };
-                    await userManager.CreateAsync(newAdmin, "Admin123!");
-                    await userManager.AddToRoleAsync(newAdmin, "Admin");
+                    Console.WriteLine($"Creating role: {roleName}");
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
                 }
             }
 
+            var adminEmail = "admin@mail.com";
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
+            if (adminUser == null)
+            {
+                Console.WriteLine("Creating admin user...");
+                var newAdmin = new ApplicationUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    Name = "Admin",
+                    Surname = "Admin"
+                };
 
-            app.Run();
+                var result = await userManager.CreateAsync(newAdmin, "Admin123!");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(newAdmin, "Admin");
+                    Console.WriteLine("Admin user created successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to create admin user:");
+                    foreach (var error in result.Errors)
+                    {
+                        Console.WriteLine($"- {error.Description}");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Admin user already exists.");
+            }
         }
     }
 }

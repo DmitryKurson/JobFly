@@ -1,4 +1,5 @@
 ﻿using JobFly.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,6 @@ namespace JobFly.Data
             : base(options)
         {
         }
-
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Employer> Employers { get; set; }
         public DbSet<Category> Categories { get; set; }

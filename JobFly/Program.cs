@@ -12,7 +12,7 @@ namespace JobFly
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Подключение к БД
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
@@ -21,7 +21,7 @@ namespace JobFly
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Настройка Identity
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Identity
             Console.WriteLine("Configuring Identity...");
             builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
      .AddRoles<IdentityRole>()
@@ -34,7 +34,7 @@ namespace JobFly
 
             var app = builder.Build();
 
-            // Выполняем миграции и создаем роли
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -43,7 +43,7 @@ namespace JobFly
                 await SeedRolesAndAdminAsync(services);
             }
 
-            // Настройка HTTP-запросов
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ HTTP-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
@@ -71,7 +71,7 @@ namespace JobFly
                 var userManager = services.GetService<UserManager<ApplicationUser>>();
                 if (userManager == null)
                 {
-                    throw new Exception("UserManager<ApplicationUser> не зарегистрирован в DI!");
+                    throw new Exception("UserManager<ApplicationUser> пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ DI!");
                 }
             }
             app.Run();

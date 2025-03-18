@@ -20,9 +20,27 @@ namespace JobFly.Data
         public DbSet<EmployeeTag> EmployeeTags { get; set; }
         public DbSet<Application> Applications { get; set; }
 
+        public Employee EmployeeProfile { get; set; }
+        public Employer EmployerProfile { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<IdentityUserToken<string>>(entity =>
+            {
+                entity.Property(e => e.Name).HasMaxLength(450);
+            });
+
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.User)
+                .WithOne()
+                .HasForeignKey<Employee>(e => e.UserId);
+
+            modelBuilder.Entity<Employer>()
+                .HasOne(e => e.User)
+                .WithOne()
+                .HasForeignKey<Employer>(e => e.UserId);
 
             modelBuilder.Entity<VacancyTag>()
                 .HasKey(vt => new { vt.VacancyId, vt.TagId });

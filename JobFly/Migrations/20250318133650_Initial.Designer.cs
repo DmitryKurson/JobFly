@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace JobFly.Data.Migrations
+namespace JobFly.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250313200847_UpdateUserInheritance")]
-    partial class UpdateUserInheritance
+    [Migration("20250318133650_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,11 +67,6 @@ namespace JobFly.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -132,10 +127,6 @@ namespace JobFly.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("JobFly.Models.Category", b =>
@@ -155,6 +146,20 @@ namespace JobFly.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("JobFly.Models.Employee", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ResumeText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Employees");
+                });
+
             modelBuilder.Entity("JobFly.Models.EmployeeTag", b =>
                 {
                     b.Property<string>("EmployeeId")
@@ -168,6 +173,20 @@ namespace JobFly.Data.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("EmployeeTags");
+                });
+
+            modelBuilder.Entity("JobFly.Models.Employer", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CompanyTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Employers");
                 });
 
             modelBuilder.Entity("JobFly.Models.Tag", b =>
@@ -375,8 +394,8 @@ namespace JobFly.Data.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -384,28 +403,6 @@ namespace JobFly.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("JobFly.Models.Employee", b =>
-                {
-                    b.HasBaseType("JobFly.Models.ApplicationUser");
-
-                    b.Property<string>("ResumeText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("Employee");
-                });
-
-            modelBuilder.Entity("JobFly.Models.Employer", b =>
-                {
-                    b.HasBaseType("JobFly.Models.ApplicationUser");
-
-                    b.Property<string>("CompanyTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("Employer");
                 });
 
             modelBuilder.Entity("JobFly.Models.Application", b =>
@@ -427,6 +424,17 @@ namespace JobFly.Data.Migrations
                     b.Navigation("Vacancy");
                 });
 
+            modelBuilder.Entity("JobFly.Models.Employee", b =>
+                {
+                    b.HasOne("JobFly.Models.ApplicationUser", "User")
+                        .WithOne()
+                        .HasForeignKey("JobFly.Models.Employee", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("JobFly.Models.EmployeeTag", b =>
                 {
                     b.HasOne("JobFly.Models.Employee", "Employee")
@@ -444,6 +452,17 @@ namespace JobFly.Data.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("JobFly.Models.Employer", b =>
+                {
+                    b.HasOne("JobFly.Models.ApplicationUser", "User")
+                        .WithOne()
+                        .HasForeignKey("JobFly.Models.Employer", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("JobFly.Models.Vacancy", b =>
@@ -540,6 +559,18 @@ namespace JobFly.Data.Migrations
                     b.Navigation("Vacancies");
                 });
 
+            modelBuilder.Entity("JobFly.Models.Employee", b =>
+                {
+                    b.Navigation("Applications");
+
+                    b.Navigation("EmployeeTags");
+                });
+
+            modelBuilder.Entity("JobFly.Models.Employer", b =>
+                {
+                    b.Navigation("Vacancies");
+                });
+
             modelBuilder.Entity("JobFly.Models.Tag", b =>
                 {
                     b.Navigation("EmployeeTags");
@@ -552,18 +583,6 @@ namespace JobFly.Data.Migrations
                     b.Navigation("Applications");
 
                     b.Navigation("VacancyTags");
-                });
-
-            modelBuilder.Entity("JobFly.Models.Employee", b =>
-                {
-                    b.Navigation("Applications");
-
-                    b.Navigation("EmployeeTags");
-                });
-
-            modelBuilder.Entity("JobFly.Models.Employer", b =>
-                {
-                    b.Navigation("Vacancies");
                 });
 #pragma warning restore 612, 618
         }

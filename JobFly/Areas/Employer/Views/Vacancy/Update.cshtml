@@ -1,24 +1,28 @@
 ﻿@model JobFly.Models.Vacancy
 
-<h2>Редагування даних проекту</h2>
-<form asp-action="edit" asp-controller="project" asp-route-id="@Model.Id">
+<h2>Edit vacancy</h2>
+<form asp-action="edit" asp-controller="vacancy" , asp-route-id="@Model.Id">
     <p>
-        <label asp-for="Id">Id</label><br />
-        <input type="text" asp-for="Id" />
+        <label asp-for="Title">Title</label><br />
+        <input type="text" asp-for="Title" />
     </p>
     <p>
-        <label asp-for="Name">Назва</label><br />
-        <input type="text" asp-for="Name" />
+        <label asp-for="Description">Task Description</label><br />
+        <input type="text" asp-for="TaskDescription" />
     </p>
     <p>
-        <label asp-for="Description">Опис</label><br />
-        <input type="text" asp-for="Description" />
+        <label asp-for="MustToHave">Must to have</label><br />
+        <input type="text" asp-for="MustToHave" />
     </p>
     <p>
-        <label asp-for="CreatorName">Автор</label><br />
-        <input type="text" asp-for="CreatorName" />
+        <label asp-for="GoodToHave">Good to have</label><br />
+        <input type="text" asp-for="GoodToHave" />
     </p>
     <p>
-        <input type="submit" value="Зберегти" />
+        <label asp-for="Salary">Salary</label><br />
+        <input type="text" asp-for="Salary" />
+    </p>
+    <p>
+        <input type="submit" value="Submit" />
     </p>
 </form>

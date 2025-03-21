@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JobFly.Areas.Employer.Controllers
 {
+    [Area("Employer")]
     public class VacancyController : Controller
     {
         private readonly IVacancyService _vacancyService;
@@ -29,6 +30,7 @@ namespace JobFly.Areas.Employer.Controllers
         [Authorize]
         public async Task<IActionResult> Create(Vacancy vacancy)
         {
+            vacancy.EmployerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             await _vacancyService.Create(vacancy);
             return RedirectToAction("Index");
         }
@@ -65,13 +67,30 @@ namespace JobFly.Areas.Employer.Controllers
             return RedirectToAction("Index");
         }
 
+        //public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
+        //{
+        //    var vacancies = await _vacancyService.GetVacancies(title, sortOrder, page, PageSize);
+        //    var count = await _vacancyService.GetVacanciesCount(title);
+
+        //    VacancyIndexViewModel viewModel = new VacancyIndexViewModel(
+        //        vacancies,
+        //        new PageViewModel(count, page, PageSize),
+        //        new FilterViewModel(title),
+        //        new VacancySortViewModel(sortOrder)
+        //    );
+
+        //    return View(viewModel);
+        //}
+
         public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
         {
-            var projects = await _vacancyService.GetVacancies(title, sortOrder, page, PageSize);
-            var count = await _vacancyService.GetVacanciesCount(title);
+            var employerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            var vacancies = await _vacancyService.GetVacanciesForEmployer(employerId, title, sortOrder, page, PageSize);
+            var count = await _vacancyService.GetVacanciesCountForEmployer(employerId, title);
 
             VacancyIndexViewModel viewModel = new VacancyIndexViewModel(
-                projects,
+                vacancies,
                 new PageViewModel(count, page, PageSize),
                 new FilterViewModel(title),
                 new VacancySortViewModel(sortOrder)

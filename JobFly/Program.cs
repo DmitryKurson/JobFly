@@ -1,3 +1,4 @@
+using JobFly.Areas.Employer.Services;
 using JobFly.Data;
 using JobFly.Models;
 using Microsoft.AspNetCore.Identity;
@@ -21,14 +22,11 @@ namespace JobFly
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // ��������� Identity
-            Console.WriteLine("Configuring Identity...");
             builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
      .AddRoles<IdentityRole>()
      .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            Console.WriteLine("Identity configured!");
-
+            builder.Services.AddScoped<IVacancyService, VacancyService>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
@@ -42,6 +40,8 @@ namespace JobFly
                 await ApplyMigrationsAsync(dbContext);
                 await SeedRolesAndAdminAsync(services);
             }
+
+           
 
             // ��������� HTTP-��������
             if (app.Environment.IsDevelopment())
@@ -63,6 +63,10 @@ namespace JobFly
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
             using (var scope = app.Services.CreateScope())
             {
@@ -74,6 +78,7 @@ namespace JobFly
                     throw new Exception("UserManager<ApplicationUser> �� ��������������� � DI!");
                 }
             }
+            
             app.Run();
         }
 

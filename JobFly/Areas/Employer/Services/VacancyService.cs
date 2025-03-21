@@ -77,6 +77,43 @@ namespace JobFly.Areas.Employer.Services
                 await _db.SaveChangesAsync();
             }
         }
+
+        public async Task<IEnumerable<Vacancy>> GetVacanciesForEmployer(string employerId, string? title, VacancySortState sortOrder, int page, int pageSize)
+        {
+            var query = _db.Vacancies.Where(v => v.EmployerId == employerId);
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                query = query.Where(v => v.Title.Contains(title));
+            }
+
+            query = sortOrder switch
+            {
+                VacancySortState.IdAsc => query.OrderBy(s => s.Id),
+                VacancySortState.IdDesc => query.OrderByDescending(s => s.Id),
+                VacancySortState.TitleAsc => query.OrderBy(s => s.Title),
+                VacancySortState.TitleDesc => query.OrderByDescending(s => s.Title),
+                VacancySortState.SalaryAsc => query.OrderBy(s => s.Salary),
+                VacancySortState.SalaryDesc => query.OrderByDescending(s => s.Salary),
+                VacancySortState.StatusAsc => query.OrderBy(s => s.Status),
+                VacancySortState.StatusDesc => query.OrderByDescending(s => s.Status),
+                _ => query.OrderBy(s => s.Id),
+            };
+
+            return await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        }
+
+        public async Task<int> GetVacanciesCountForEmployer(string employerId, string? title)
+        {
+            var query = _db.Vacancies.Where(v => v.EmployerId == employerId);
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                query = query.Where(v => v.Title.Contains(title));
+            }
+
+            return await query.CountAsync();
+        }
     }
 }
 

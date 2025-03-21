@@ -21,7 +21,7 @@
 
 <form method="get">
     <label>Title: </label>
-    <input title="title" value="@Model.FilterViewModel.SelectedName" />
+    <input title="title" value="@Model.FilterViewModel.SelectedTitle" />
     <input type="submit" value="Filter" />
 </form>
 
@@ -29,12 +29,12 @@
     <tr>
         <th>
             <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.IDSort)"
-               asp-route-name="@(Model.FilterViewModel.SelectedName)">ID</a>
+               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">ID</a>
         </th>
         <th>
             <a asp-action="Index"
                asp-route-sortOrder="@(Model.VacancySortViewModel.TitleSort)"
-               asp-route-name="@(Model.FilterViewModel.SelectedName)">Title</a>
+               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">Title</a>
         </th>
         <th>
             Task Description
@@ -46,15 +46,15 @@
             Good to have
         </th>
         <th>
-            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.SalaryNameSort)"
-               asp-route-name="@(Model.FilterViewModel.SelectedName)">Salary</a>
+            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.SalarySort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">Salary</a>
         </th>
         <th>
-            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.StatusNameSort)"
-               asp-route-name="@(Model.FilterViewModel.SelectedName)">Status</a>
+            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.StatusSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">Status</a>
         </th>
     </tr>
-    @foreach (var vacancy in Model.projects)
+    @foreach (var vacancy in Model.Vacancies)
     {
         <tr>
             <td>@vacancy.Id</td>
@@ -81,7 +81,7 @@
     {
         <a asp-action="Index"
            asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
            asp-route-sortorder="@(Model.VacancySortViewModel.Current)"
            class="glyphicon glyphicon-chevron-left">
              Back
@@ -91,7 +91,7 @@
     {
         <a asp-action="Index"
            asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
            asp-route-sortorder="@(Model.VacancySortViewModel.Current)"
            class="glyphicon glyphicon-chevron-right">
             Next

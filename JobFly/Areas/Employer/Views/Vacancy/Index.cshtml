@@ -1,5 +1,100 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using JobFly.Models
+
+<style>
+    .glyphicon {
+        display: inline-block;
+        padding: 0 5px;
+    }
+
+    .glyphicon-chevron-right:after {
+        content: "\00BB";
+    }
+
+    .glyphicon-chevron-left:before {
+        content: "\00AB";
+    }
+</style>
+
+<h1>List of your vacancies</h1>
+
+<p><a asp-action="Create">Add vacancy</a></p>
+
+<form method="get">
+    <label>Title: </label>
+    <input title="title" value="@Model.FilterViewModel.SelectedName" />
+    <input type="submit" value="Filter" />
+</form>
+
+<table>
+    <tr>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.IDSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedName)">ID</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.VacancySortViewModel.TitleSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedName)">Title</a>
+        </th>
+        <th>
+            Task Description
+        </th>
+        <th>
+            Must to have
+        </th>
+        <th>
+            Good to have
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.SalaryNameSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedName)">Salary</a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.StatusNameSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedName)">Status</a>
+        </th>
+    </tr>
+    @foreach (var vacancy in Model.projects)
+    {
+        <tr>
+            <td>@vacancy.Id</td>
+            <td>@vacancy.Title</td>
+            <td>@vacancy.TaskDescription</td>
+            <td>@vacancy.MustToHave</td>
+            <td>@vacancy.GoodToHave</td>
+            <td>@vacancy.Salary</td>
+            <td>@vacancy.Status</td>
+
+            <td>
+                <a asp-action="Update" asp-controller="Vacancy" asp-route-id="@vacancy.Id">Edit</a>
+            </td>
+            <td>
+                <form asp-controller="Vacancy" asp-action="Delete" method="post" asp-route-id="@vacancy.Id">
+                    <input type="submit" value="Delete" />
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+<p>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-sortorder="@(Model.VacancySortViewModel.Current)"
+           class="glyphicon glyphicon-chevron-left">
+             Back
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-sortorder="@(Model.VacancySortViewModel.Current)"
+           class="glyphicon glyphicon-chevron-right">
+            Next
+        </a>
+    }
+</p>

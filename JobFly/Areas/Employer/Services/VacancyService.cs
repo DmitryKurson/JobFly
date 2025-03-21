@@ -39,7 +39,7 @@ namespace JobFly.Areas.Employer.Services
             return await vacancies.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
-        public async Task<int> GetVacanciesCountAsync(string? title)
+        public async Task<int> GetVacanciesCount(string? title)
         {
             IQueryable<Vacancy> projects = _db.Vacancies;
 
@@ -51,7 +51,7 @@ namespace JobFly.Areas.Employer.Services
             return await projects.CountAsync();
         }
 
-        public async Task<Vacancy?> GetVacancyById(int id)
+        public async Task<Vacancy?> GetVacancyById(int? id)
         {
             return await _db.Vacancies.FirstOrDefaultAsync(p => p.Id == id);
         }
@@ -68,9 +68,9 @@ namespace JobFly.Areas.Employer.Services
             await _db.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int? id)
         {
-            var project = await GetVacancyById(id);
+            var project = await GetVacancyById((int)id);
             if (project != null)
             {
                 _db.Vacancies.Remove(project);

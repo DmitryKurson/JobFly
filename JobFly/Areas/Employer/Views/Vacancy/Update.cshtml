@@ -1,5 +1,24 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model JobFly.Models.Vacancy
+
+<h2>Редагування даних проекту</h2>
+<form asp-action="edit" asp-controller="project" asp-route-id="@Model.Id">
+    <p>
+        <label asp-for="Id">Id</label><br />
+        <input type="text" asp-for="Id" />
+    </p>
+    <p>
+        <label asp-for="Name">Назва</label><br />
+        <input type="text" asp-for="Name" />
+    </p>
+    <p>
+        <label asp-for="Description">Опис</label><br />
+        <input type="text" asp-for="Description" />
+    </p>
+    <p>
+        <label asp-for="CreatorName">Автор</label><br />
+        <input type="text" asp-for="CreatorName" />
+    </p>
+    <p>
+        <input type="submit" value="Зберегти" />
+    </p>
+</form>

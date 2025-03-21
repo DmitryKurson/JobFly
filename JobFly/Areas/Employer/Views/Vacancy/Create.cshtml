@@ -1,5 +1,28 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model JobFly.Models.Vacancy
+
+<h2>Додати проект</h2>
+<form asp-action="create" asp-controller="vacancy">
+    <p>
+        <label asp-for="Title">Title</label><br />
+        <input type="text" asp-for="Title" />
+    </p>
+    <p>
+        <label asp-for="Description">Task Description</label><br />
+        <input type="text" asp-for="TaskDescription" />
+    </p>
+    <p>
+        <label asp-for="MustToHave">Must to have</label><br />
+        <input type="text" asp-for="MustToHave" />
+    </p>
+    <p>
+        <label asp-for="GoodToHave">Good to have</label><br />
+        <input type="text" asp-for="GoodToHave" />
+    </p>
+    <p>
+        <label asp-for="Salary">Salary</label><br />
+        <input type="text" asp-for="Salary" />
+    </p>
+    <p>
+        <input type="submit" value="Додати" />
+    </p>
+</form>

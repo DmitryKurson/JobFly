@@ -1,0 +1,77 @@
+﻿@using JobFly.Models
+
+<style>
+    .glyphicon {
+        display: inline-block;
+        padding: 0 5px;
+    }
+
+    .glyphicon-chevron-right:after {
+        content: "\00BB";
+    }
+
+    .glyphicon-chevron-left:before {
+        content: "\00AB";
+    }
+</style>
+
+<h1>List of categories</h1>
+
+<p><a asp-action="Create">Add category</a></p>
+
+<form method="get">
+    <label>Title: </label>
+    <input title="title" value="@Model.FilterViewModel.SelectedTitle" />
+    <input type="submit" value="Filter" />
+</form>
+
+<table>
+    <tr>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@(Model.CategorySortViewModel.IDSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">ID</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.CategorySortViewModel.TitleSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">Title</a>
+        </th>
+    </tr>
+    @foreach (var category in Model.Categories)
+    {
+        <tr>
+            <td>@category.Id</td>
+            <td>@category.Title</td>
+            <td>
+                <a asp-action="Update" asp-controller="Category" asp-route-id="@category.Id">Edit</a>
+            </td>
+            <td>
+                <form asp-controller="Category" asp-action="Delete" method="post" asp-route-id="@category.Id">
+                    <input type="submit" value="Delete" />
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+<p>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
+           asp-route-sortorder="@(Model.CategorySortViewModel.Current)"
+           class="glyphicon glyphicon-chevron-left">
+             Back
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
+           asp-route-sortorder="@(Model.CategorySortViewModel.Current)"
+           class="glyphicon glyphicon-chevron-right">
+            Next
+        </a>
+    }
+</p>

@@ -5,7 +5,7 @@ namespace JobFly.Areas.Employer.Services
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<Category>> GetCategories(string? title, VacancySortState sortOrder, int page, int pageSize);
+        Task<IEnumerable<Category>> GetCategories(string? title, CategorySortState sortOrder, int page, int pageSize);
         Task<IEnumerable<Category>> GetAll();
         Task<int> GetCategoriesCount(string? title);
         Task<Category?> GetCategoryById(int? id);   

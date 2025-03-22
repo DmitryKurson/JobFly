@@ -21,7 +21,7 @@ namespace JobFly.Areas.Employer.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Category>> GetCategories(string? title, VacancySortState sortOrder, int page, int pageSize)
+        public async Task<IEnumerable<Category>> GetCategories(string? title, CategorySortState sortOrder, int page, int pageSize)
         {
             IQueryable<Category> categories = _db.Categories;
 
@@ -32,10 +32,10 @@ namespace JobFly.Areas.Employer.Services
 
             categories = sortOrder switch
             {
-                VacancySortState.IdAsc => categories.OrderBy(s => s.Id),
-                VacancySortState.IdDesc => categories.OrderByDescending(s => s.Id),
-                VacancySortState.TitleAsc => categories.OrderBy(s => s.Title),
-                VacancySortState.TitleDesc => categories.OrderByDescending(s => s.Title),
+                CategorySortState.IdAsc => categories.OrderBy(s => s.Id),
+                CategorySortState.IdDesc => categories.OrderByDescending(s => s.Id),
+                CategorySortState.TitleAsc => categories.OrderBy(s => s.Title),
+                CategorySortState.TitleDesc => categories.OrderByDescending(s => s.Title),
                 //VacancySortState.SalaryAsc => categories.OrderBy(s => s.Salary),
                 //VacancySortState.SalaryDesc => categories.OrderByDescending(s => s.Salary),
                 //VacancySortState.StatusAsc => categories.OrderBy(s => s.Status),

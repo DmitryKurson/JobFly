@@ -1,0 +1,12 @@
+﻿@model JobFly.Models.Category
+
+<h2>Edit category</h2>
+<form asp-action="edit" asp-controller="category" , asp-route-id="@Model.Id">
+    <p>
+        <label asp-for="Title">Title</label><br />
+        <input type="text" asp-for="Title" />
+    </p>
+    <p>
+        <input type="submit" value="Submit" />
+    </p>
+</form>

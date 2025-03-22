@@ -29,7 +29,7 @@ namespace JobFly
 
 
             builder.Services.AddScoped<IVacancyService, VacancyService>();
-            
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
 
             var app = builder.Build();
 

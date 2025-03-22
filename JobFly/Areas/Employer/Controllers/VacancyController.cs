@@ -1,10 +1,12 @@
-﻿using JobFly.Areas.Employer.Services;
+﻿using JobFly.Areas.Employer.Models;
+using JobFly.Areas.Employer.Services;
 using JobFly.Data;
 using JobFly.Models;
 using JobFly.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobFly.Areas.Employer.Controllers
@@ -13,17 +15,25 @@ namespace JobFly.Areas.Employer.Controllers
     public class VacancyController : Controller
     {
         private readonly IVacancyService _vacancyService;
+        private readonly ICategoryService _categoryService;
         private const int PageSize = 3;
 
-        public VacancyController(IVacancyService projectService)
+        public VacancyController(IVacancyService vacancyService, ICategoryService categoryService)
         {
-            _vacancyService = projectService;
+            _vacancyService = vacancyService;
+            _categoryService = categoryService;
         }
 
         [Authorize]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var categories = _categoryService.GetAll();
+            var viewModel = new VacancyCreateViewModel
+            {
+                Vacancy = new Vacancy(),
+                Categories = await categories
+            };
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -31,6 +41,7 @@ namespace JobFly.Areas.Employer.Controllers
         public async Task<IActionResult> Create(Vacancy vacancy)
         {
             vacancy.EmployerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            vacancy.Status = "Active";
             await _vacancyService.Create(vacancy);
             return RedirectToAction("Index");
         }
@@ -82,6 +93,7 @@ namespace JobFly.Areas.Employer.Controllers
         //    return View(viewModel);
         //}
 
+        [Authorize]
         public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
         {
             var employerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;

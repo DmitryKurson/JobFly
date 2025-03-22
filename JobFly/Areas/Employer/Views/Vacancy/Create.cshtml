@@ -1,26 +1,31 @@
-﻿@model JobFly.Models.Vacancy
-
+﻿@model JobFly.Areas.Employer.Models.VacancyCreateViewModel
 <h2>Додати проект</h2>
-<form asp-action="create" asp-controller="vacancy">
+<form asp-action="create" asp-controller="vacancy" method="post">
     <p>
-        <label asp-for="Title">Title</label><br />
-        <input type="text" asp-for="Title" />
+        <label asp-for="Vacancy.Title">Title</label><br />
+        <input type="text" asp-for="Vacancy.Title" />
     </p>
     <p>
-        <label asp-for="TaskDescription">Task Description</label><br />
-        <input type="text" asp-for="TaskDescription" />
+        <label asp-for="Vacancy.TaskDescription">Task Description</label><br />
+        <input type="text" asp-for="Vacancy.TaskDescription" />
     </p>
     <p>
-        <label asp-for="MustToHave">Must to have</label><br />
-        <input type="text" asp-for="MustToHave" />
+        <label asp-for="Vacancy.MustToHave">Must to have</label><br />
+        <input type="text" asp-for="Vacancy.MustToHave" />
     </p>
     <p>
-        <label asp-for="GoodToHave">Good to have</label><br />
-        <input type="text" asp-for="GoodToHave" />
+        <label asp-for="Vacancy.GoodToHave">Good to have</label><br />
+        <input type="text" asp-for="Vacancy.GoodToHave" />
     </p>
     <p>
-        <label asp-for="Salary">Salary</label><br />
-        <input type="text" asp-for="Salary" />
+        <label asp-for="Vacancy.Salary">Salary</label><br />
+        <input type="text" asp-for="Vacancy.Salary" />
+    </p>
+    <p>
+        <label asp-for="Vacancy.CategoryId">Category</label><br />
+        <select asp-for="Vacancy.CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
+            <option value="">-- Виберіть категорію --</option>
+        </select>
     </p>
     <p>
         <input type="submit" value="Додати" />

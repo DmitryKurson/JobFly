@@ -72,8 +72,9 @@ namespace JobFly.Areas.Employer.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Edit(Vacancy vacancy)
+        public async Task<IActionResult> Update(Vacancy vacancy)
         {
+            vacancy.EmployerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             await _vacancyService.Update(vacancy);
             return RedirectToAction("Index");
         }

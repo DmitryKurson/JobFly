@@ -1,28 +1,44 @@
-﻿@model JobFly.Models.Vacancy
+﻿@model JobFly.Areas.Employer.Models.VacancyUpdateViewModel
 
 <h2>Edit vacancy</h2>
-<form asp-action="edit" asp-controller="vacancy" , asp-route-id="@Model.Id">
+
+<form asp-action="update" asp-controller="vacancy" asp-route-id="@Model.Id">
+   
     <p>
-        <label asp-for="Title">Title</label><br />
+        <label asp-for="Title"></label><br />
         <input type="text" asp-for="Title" />
+        <span asp-validation-for="Title" class="text-danger"></span>
     </p>
     <p>
-        <label asp-for="TaskDescription">Task Description</label><br />
+        <label asp-for="TaskDescription"></label><br />
         <input type="text" asp-for="TaskDescription" />
+        <span asp-validation-for="TaskDescription" class="text-danger"></span>
     </p>
     <p>
-        <label asp-for="MustToHave">Must to have</label><br />
+        <label asp-for="MustToHave"></label><br />
         <input type="text" asp-for="MustToHave" />
+        <span asp-validation-for="MustToHave" class="text-danger"></span>
     </p>
     <p>
-        <label asp-for="GoodToHave">Good to have</label><br />
-        <input type="text" asp-for="GoodToHave" />
+        <label asp-for="GoodToHave"></label><br />
+        <input type="text" asp-for="GoodToHave"/>
+        <span asp-validation-for="GoodToHave" class="text-danger"></span>
     </p>
     <p>
-        <label asp-for="Salary">Salary</label><br />
-        <input type="text" asp-for="Salary" />
+        <label asp-for="Salary"></label><br />
+        <input type="number" asp-for="Salary"/>
+        <span asp-validation-for="Salary" class="text-danger"></span>
     </p>
     <p>
-        <input type="submit" value="Submit" />
+        <label asp-for="IsActive">Active</label><br />
+        <input type="checkbox" asp-for="IsActive" />
+        <span asp-validation-for="IsActive" class="text-danger"></span>
+    </p>
+    <p>
+        <input type="submit" value="Submit" class="btn btn-primary" />
     </p>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

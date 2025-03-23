@@ -51,7 +51,7 @@
         </th>
         <th>
             <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.StatusSort)"
-               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">Status</a>
+               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">IsActive</a>
         </th>
     </tr>
     @foreach (var vacancy in Model.Vacancies)
@@ -63,7 +63,7 @@
             <td>@vacancy.MustToHave</td>
             <td>@vacancy.GoodToHave</td>
             <td>@vacancy.Salary</td>
-            <td>@vacancy.Status</td>
+            <td>@vacancy.IsActive</td>
 
             <td>
                 <a asp-action="Update" asp-controller="Vacancy" asp-route-id="@vacancy.Id">Edit</a>

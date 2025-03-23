@@ -1,5 +1,5 @@
 ﻿@model JobFly.Areas.Employer.Models.VacancyCreateViewModel
-<h2>Додати проект</h2>
+<h2>Create a vacancy</h2>
 <form asp-action="create" asp-controller="vacancy" method="post">
     <p>
         <label asp-for="Vacancy.Title">Title</label><br />
@@ -19,7 +19,7 @@
     </p>
     <p>
         <label asp-for="Vacancy.Salary">Salary</label><br />
-        <input type="text" asp-for="Vacancy.Salary" />
+        <input type="number" asp-for="Vacancy.Salary" />
     </p>
     <p>
         <label asp-for="Vacancy.CategoryId">Category</label><br />

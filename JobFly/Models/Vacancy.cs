@@ -9,12 +9,23 @@ namespace JobFly.Models
         [Key]
         public int Id { get; set; }
         public int CategoryId { get; set; }
+
+        [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }
+
+        [Required(ErrorMessage = "Task Description is required")]
         public string TaskDescription { get; set; }
+
+        [Required(ErrorMessage = "Must to have is required")]
         public string MustToHave { get; set; }
+
+        [Required(ErrorMessage = "Must to have is required")]
         public string GoodToHave { get; set; }
+
+        [Required(ErrorMessage = "Salary is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Salary must be greater than 0")]
         public int Salary { get; set; }
-        public string Status { get; set; } // Например, "Открыта", "Закрыта"
+        public bool IsActive { get; set; } // Например, "Открыта", "Закрыта"
 
         [ForeignKey("Employer")]
         public string EmployerId { get; set; }

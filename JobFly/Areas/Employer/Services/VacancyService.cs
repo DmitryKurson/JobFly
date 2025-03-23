@@ -31,8 +31,8 @@ namespace JobFly.Areas.Employer.Services
                 VacancySortState.TitleDesc => vacancies.OrderByDescending(s => s.Title),
                 VacancySortState.SalaryAsc => vacancies.OrderBy(s => s.Salary),
                 VacancySortState.SalaryDesc => vacancies.OrderByDescending(s => s.Salary),
-                VacancySortState.StatusAsc => vacancies.OrderBy(s => s.Status),
-                VacancySortState.StatusDesc => vacancies.OrderByDescending(s => s.Status),
+                VacancySortState.StatusAsc => vacancies.OrderBy(s => s.IsActive),
+                VacancySortState.StatusDesc => vacancies.OrderByDescending(s => s.IsActive),
                 _ => vacancies.OrderBy(s => s.Id),
             };
 
@@ -95,8 +95,8 @@ namespace JobFly.Areas.Employer.Services
                 VacancySortState.TitleDesc => query.OrderByDescending(s => s.Title),
                 VacancySortState.SalaryAsc => query.OrderBy(s => s.Salary),
                 VacancySortState.SalaryDesc => query.OrderByDescending(s => s.Salary),
-                VacancySortState.StatusAsc => query.OrderBy(s => s.Status),
-                VacancySortState.StatusDesc => query.OrderByDescending(s => s.Status),
+                VacancySortState.StatusAsc => query.OrderBy(s => s.IsActive),
+                VacancySortState.StatusDesc => query.OrderByDescending(s => s.IsActive),
                 _ => query.OrderBy(s => s.Id),
             };
 

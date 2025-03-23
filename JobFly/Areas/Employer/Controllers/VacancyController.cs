@@ -41,7 +41,7 @@ namespace JobFly.Areas.Employer.Controllers
         public async Task<IActionResult> Create(Vacancy vacancy)
         {
             vacancy.EmployerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            vacancy.Status = "Active";
+            vacancy.IsActive = true;
             await _vacancyService.Create(vacancy);
             return RedirectToAction("Index");
         }
@@ -58,24 +58,55 @@ namespace JobFly.Areas.Employer.Controllers
             return NotFound();
         }
 
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Update(int? id)
         {
-            if (id != null)
+            if (id == null)
+                return NotFound();
+
+            var vacancy = await _vacancyService.GetVacancyById(id.Value);
+            if (vacancy == null)
+                return NotFound();
+
+            // Мапимо Vacancy в ViewModel
+            var viewModel = new VacancyUpdateViewModel
             {
-                var vacancy = await _vacancyService.GetVacancyById(id);
-                if (vacancy != null)
-                    return View(vacancy);
-            }
-            return NotFound();
+                Id = vacancy.Id,
+                Title = vacancy.Title,
+                TaskDescription = vacancy.TaskDescription,
+                MustToHave = vacancy.MustToHave,
+                GoodToHave = vacancy.GoodToHave,
+                Salary = vacancy.Salary,
+                IsActive = vacancy.IsActive
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Update(Vacancy vacancy)
+        public async Task<IActionResult> Update(VacancyUpdateViewModel model)
         {
-            vacancy.EmployerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            await _vacancyService.Update(vacancy);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var existingVacancy = await _vacancyService.GetVacancyById(model.Id);
+            if (existingVacancy == null)
+                return NotFound();
+
+            // Оновлюємо поля
+            existingVacancy.Title = model.Title;
+            existingVacancy.TaskDescription = model.TaskDescription;
+            existingVacancy.MustToHave = model.MustToHave;
+            existingVacancy.GoodToHave = model.GoodToHave;
+            existingVacancy.Salary = model.Salary;
+            existingVacancy.IsActive = model.IsActive;
+
+            await _vacancyService.Update(existingVacancy);
+
             return RedirectToAction("Index");
         }
 

@@ -27,24 +27,41 @@ namespace JobFly.Areas.Employer.Controllers
         [Authorize]
         public async Task<IActionResult> Create()
         {
-            var categories = _categoryService.GetAll();
+            var categories = await _categoryService.GetAll();
             var viewModel = new VacancyCreateViewModel
             {
-                Vacancy = new Vacancy(),
-                Categories = await categories
+                Categories = categories
             };
             return View(viewModel);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(Vacancy vacancy)
+        public async Task<IActionResult> Create(VacancyCreateViewModel model)
         {
-            vacancy.EmployerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            vacancy.IsActive = true;
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await _categoryService.GetAll();
+                return View(model);
+            }
+
+            var vacancy = new Vacancy
+            {
+                Title = model.Title,
+                TaskDescription = model.TaskDescription,
+                MustToHave = model.MustToHave,
+                GoodToHave = model.GoodToHave,
+                Salary = model.Salary,
+                CategoryId = model.CategoryId.Value,
+                IsActive = true,
+                EmployerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+            };
+
             await _vacancyService.Create(vacancy);
+
             return RedirectToAction("Index");
         }
+
 
         [HttpPost]
         [Authorize]

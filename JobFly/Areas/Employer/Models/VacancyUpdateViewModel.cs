@@ -19,7 +19,7 @@ namespace JobFly.Areas.Employer.Models
         public string GoodToHave { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue)]
+        [Range(1, 100000)]
         public int Salary { get; set; }
 
         public bool IsActive { get; set; }

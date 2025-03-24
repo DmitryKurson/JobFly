@@ -137,21 +137,6 @@ namespace JobFly.Areas.Employer.Controllers
             return RedirectToAction("Index");
         }
 
-        //public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
-        //{
-        //    var vacancies = await _vacancyService.GetVacancies(title, sortOrder, page, PageSize);
-        //    var count = await _vacancyService.GetVacanciesCount(title);
-
-        //    VacancyIndexViewModel viewModel = new VacancyIndexViewModel(
-        //        vacancies,
-        //        new PageViewModel(count, page, PageSize),
-        //        new FilterViewModel(title),
-        //        new VacancySortViewModel(sortOrder)
-        //    );
-
-        //    return View(viewModel);
-        //}
-
         [Authorize]
         public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
         {

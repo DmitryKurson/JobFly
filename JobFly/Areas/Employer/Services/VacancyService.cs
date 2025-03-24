@@ -2,6 +2,7 @@
 using JobFly.Models;
 using JobFly.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace JobFly.Areas.Employer.Services
 {
@@ -16,7 +17,9 @@ namespace JobFly.Areas.Employer.Services
 
         public async Task<IEnumerable<Vacancy>> GetVacancies(string? title, VacancySortState sortOrder, int page, int pageSize)
         {
-            IQueryable<Vacancy> vacancies = _db.Vacancies;
+            IQueryable<Vacancy> vacancies = _db.Vacancies
+                .Include(v => v.Category)
+                .Include(v => v.Employer);
 
             if (!string.IsNullOrEmpty(title))
             {
@@ -33,6 +36,10 @@ namespace JobFly.Areas.Employer.Services
                 VacancySortState.SalaryDesc => vacancies.OrderByDescending(s => s.Salary),
                 VacancySortState.StatusAsc => vacancies.OrderBy(s => s.IsActive),
                 VacancySortState.StatusDesc => vacancies.OrderByDescending(s => s.IsActive),
+                VacancySortState.CategoryAsc => vacancies.OrderBy(v => v.Category.Title),
+                VacancySortState.CategoryDesc => vacancies.OrderByDescending(v => v.Category.Title),
+                VacancySortState.EmployerAsc => vacancies.OrderBy(v => v.Employer.CompanyTitle),
+                VacancySortState.EmployerDesc => vacancies.OrderByDescending(v => v.Employer.CompanyTitle),
                 _ => vacancies.OrderBy(s => s.Id),
             };
 

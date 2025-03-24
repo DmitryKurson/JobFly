@@ -7,6 +7,7 @@
         public VacancySortState SalarySort { get; }
         public VacancySortState StatusSort { get; }
         public VacancySortState CategorySort { get; private set; }
+        public VacancySortState EmployerSort { get; private set; }
         public VacancySortState Current { get; }
         
 
@@ -17,6 +18,7 @@
             SalarySort = sortOrder == VacancySortState.SalaryAsc ? VacancySortState.SalaryDesc : VacancySortState.SalaryAsc;
             StatusSort = sortOrder == VacancySortState.StatusAsc ? VacancySortState.StatusDesc : VacancySortState.StatusAsc;
             CategorySort = sortOrder == VacancySortState.CategoryAsc ? VacancySortState.CategoryDesc : VacancySortState.CategoryAsc;
+            EmployerSort = sortOrder == VacancySortState.EmployerAsc ? VacancySortState.EmployerDesc : VacancySortState.EmployerAsc;
             Current = sortOrder;
         }
     }

@@ -11,6 +11,8 @@
         StatusAsc,
         StatusDesc,
         CategoryAsc,
-        CategoryDesc
+        CategoryDesc,
+        EmployerAsc,
+        EmployerDesc
     }
 }

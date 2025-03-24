@@ -1,6 +1,14 @@
-﻿using JobFly.Areas.Employer.Services;
+﻿using JobFly.Areas.Employer.Models;
+using JobFly.Areas.Employer.Services;
+using JobFly.Data;
+using JobFly.Models;
+using JobFly.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace JobFly.Areas.Admin.Controllers
 {
@@ -8,18 +16,26 @@ namespace JobFly.Areas.Admin.Controllers
     public class VacancyController : Controller
     {
         private readonly IVacancyService _vacancyService;
-        private readonly ICategoryService _categoryService;
         private const int PageSize = 3;
 
         public VacancyController(IVacancyService vacancyService, ICategoryService categoryService)
         {
-            _vacancyService = vacancyService;
-            _categoryService = categoryService;
+            _vacancyService = vacancyService;           
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
         {
-            return View();
+            var vacancies = await _vacancyService.GetVacancies(title, sortOrder, page, PageSize);
+            var count = await _vacancyService.GetVacanciesCount(title);
+
+            VacancyIndexViewModel viewModel = new VacancyIndexViewModel(
+                vacancies,
+                new PageViewModel(count, page, PageSize),
+                new FilterViewModel(title),
+                new VacancySortViewModel(sortOrder)
+            );
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -28,7 +44,7 @@ namespace JobFly.Areas.Admin.Controllers
         {
             if (id != null)
             {
-                await _categoryService.Delete(id);
+                await _vacancyService.Delete(id);
                 return RedirectToAction("Index");
             }
             return NotFound();

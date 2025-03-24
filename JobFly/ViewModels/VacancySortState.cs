@@ -9,6 +9,8 @@
         SalaryAsc,
         SalaryDesc,
         StatusAsc,
-        StatusDesc
+        StatusDesc,
+        CategoryAsc,
+        CategoryDesc
     }
 }

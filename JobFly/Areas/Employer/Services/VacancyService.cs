@@ -78,15 +78,18 @@ namespace JobFly.Areas.Employer.Services
             }
         }
 
-        public async Task<IEnumerable<Vacancy>> GetVacanciesForEmployer(string employerId, string? title, VacancySortState sortOrder, int page, int pageSize)
+        public async Task<List<Vacancy>> GetVacanciesForEmployer(string employerId, string title, VacancySortState sortOrder, int page, int pageSize)
         {
-            var query = _db.Vacancies.Where(v => v.EmployerId == employerId);
+            var query = _db.Vacancies
+                .Include(v => v.Category) // Підвантажуємо категорію
+                .Where(v => v.EmployerId == employerId);
 
             if (!string.IsNullOrEmpty(title))
             {
                 query = query.Where(v => v.Title.Contains(title));
             }
 
+            // Сортування:
             query = sortOrder switch
             {
                 VacancySortState.IdAsc => query.OrderBy(s => s.Id),
@@ -97,11 +100,19 @@ namespace JobFly.Areas.Employer.Services
                 VacancySortState.SalaryDesc => query.OrderByDescending(s => s.Salary),
                 VacancySortState.StatusAsc => query.OrderBy(s => s.IsActive),
                 VacancySortState.StatusDesc => query.OrderByDescending(s => s.IsActive),
-                _ => query.OrderBy(s => s.Id),
+                VacancySortState.CategoryAsc => query.OrderBy(v => v.Category.Title),
+                VacancySortState.CategoryDesc => query.OrderByDescending(v => v.Category.Title),
+
+                _ => query.OrderBy(v => v.Id),
             };
 
-            return await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
+
+            return await query.ToListAsync();
         }
+
+
+
 
         public async Task<int> GetVacanciesCountForEmployer(string employerId, string? title)
         {

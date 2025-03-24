@@ -8,7 +8,7 @@ namespace JobFly.Areas.Employer.Services
         Task<IEnumerable<Vacancy>> GetVacancies(string? title, VacancySortState sortOrder, int page, int pageSize);
         Task<int> GetVacanciesCount(string? title);
         Task<Vacancy?> GetVacancyById(int? id);
-        public Task<IEnumerable<Vacancy>> GetVacanciesForEmployer(string employerId, string? title, VacancySortState sortOrder, int page, int pageSize);
+        Task<List<Vacancy>> GetVacanciesForEmployer(string employerId, string title, VacancySortState sortOrder, int page, int pageSize);
         public Task<int> GetVacanciesCountForEmployer(string employerId, string? title);
         Task Create(Vacancy project);
         Task Update(Vacancy project);

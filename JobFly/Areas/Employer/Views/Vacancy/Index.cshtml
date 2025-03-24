@@ -21,7 +21,7 @@
 
 <form method="get">
     <label>Title: </label>
-    <input title="title" value="@Model.FilterViewModel.SelectedTitle" />
+    <input name="title" value="@Model.FilterViewModel.SelectedTitle" />
     <input type="submit" value="Filter" />
 </form>
 
@@ -29,12 +29,12 @@
     <tr>
         <th>
             <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.IDSort)"
-               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">ID</a>
+               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">ID</a>
         </th>
         <th>
             <a asp-action="Index"
                asp-route-sortOrder="@(Model.VacancySortViewModel.TitleSort)"
-               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">Title</a>
+               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Title</a>
         </th>
         <th>
             Task Description
@@ -47,11 +47,15 @@
         </th>
         <th>
             <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.SalarySort)"
-               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">Salary</a>
+               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Salary</a>
         </th>
         <th>
             <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.StatusSort)"
-               asp-route-name="@(Model.FilterViewModel.SelectedTitle)">IsActive</a>
+               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">IsActive</a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.CategorySort)"
+               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Category</a>
         </th>
     </tr>
     @foreach (var vacancy in Model.Vacancies)
@@ -64,6 +68,7 @@
             <td>@vacancy.GoodToHave</td>
             <td>@vacancy.Salary</td>
             <td>@vacancy.IsActive</td>
+            <td>@vacancy.Category?.Title</td>
 
             <td>
                 <a asp-action="Update" asp-controller="Vacancy" asp-route-id="@vacancy.Id">Edit</a>
@@ -76,22 +81,23 @@
         </tr>
     }
 </table>
+
 <p>
     @if (Model.PageViewModel.HasPreviousPage)
     {
         <a asp-action="Index"
            asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
+           asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
            asp-route-sortorder="@(Model.VacancySortViewModel.Current)"
            class="glyphicon glyphicon-chevron-left">
-             Back
+            Back
         </a>
     }
     @if (Model.PageViewModel.HasNextPage)
     {
         <a asp-action="Index"
            asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
+           asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
            asp-route-sortorder="@(Model.VacancySortViewModel.Current)"
            class="glyphicon glyphicon-chevron-right">
             Next

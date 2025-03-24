@@ -169,5 +169,6 @@ namespace JobFly.Areas.Employer.Controllers
 
             return View(viewModel);
         }
+
     }
 }

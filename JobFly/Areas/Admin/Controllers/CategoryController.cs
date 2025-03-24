@@ -64,6 +64,7 @@ namespace JobFly.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         public async Task<IActionResult> Index(string title, int page = 1, ViewModels.CategorySortState sortOrder = CategorySortState.IdAsc)
         {
             var vacancies = await _categoryService.GetCategories(title, sortOrder, page, PageSize);

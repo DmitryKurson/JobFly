@@ -1,7 +1,7 @@
 ﻿@model JobFly.Areas.Employer.Models.VacancyCreateViewModel
 
 <h2>Create a vacancy</h2>
-<form asp-action="create" asp-controller="vacancy" method="post">
+<form asp-action="Create" asp-controller="Vacancy" method="post">
     <p>
         <label asp-for="Title">Title</label><br />
         <input type="text" asp-for="Title" />
@@ -35,6 +35,11 @@
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </p>
     <p>
-        <input type="submit" value="Create" />
+        <input type="submit" value="Create" class="btn btn-primary" />
     </p>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

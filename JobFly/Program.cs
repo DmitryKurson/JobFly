@@ -37,6 +37,7 @@ namespace JobFly
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+
                 var dbContext = services.GetRequiredService<ApplicationDbContext>();
                 await ApplyMigrationsAsync(dbContext);
                 await SeedRolesAndAdminAsync(services);
@@ -67,17 +68,12 @@ namespace JobFly
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-    //        app.MapAreaControllerRoute(
-    //name: "Employer",
-    //areaName: "Employer",
-    //pattern: "Employer/{controller=Vacancy}/{action=Index}/{id?}");
             
             app.MapRazorPages();
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-
+    
                 var userManager = services.GetService<UserManager<ApplicationUser>>();
                 if (userManager == null)
                 {

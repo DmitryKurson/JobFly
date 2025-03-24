@@ -25,7 +25,7 @@ namespace JobFly.Models
         [Required(ErrorMessage = "Salary is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Salary must be greater than 0")]
         public int Salary { get; set; }
-        public bool IsActive { get; set; } // Например, "Открыта", "Закрыта"
+        public bool IsActive { get; set; } 
 
         [ForeignKey("Employer")]
         public string EmployerId { get; set; }

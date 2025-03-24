@@ -39,6 +39,16 @@ namespace JobFly.Areas.Employer.Controllers
         [Authorize]
         public async Task<IActionResult> Create(VacancyCreateViewModel model)
         {
+            foreach (var kvp in ModelState)
+            {
+                var key = kvp.Key;
+                var state = kvp.Value;
+                foreach (var error in state.Errors)
+                {
+                    Console.WriteLine($"Key: {key} - Error: {error.ErrorMessage}");
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 model.Categories = await _categoryService.GetAll();

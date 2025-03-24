@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using JobFly.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JobFly.Areas.Employer.Models
 {
     public class VacancyCreateViewModel
     {
+        [BindNever] // <-- Ось це додай
         public IEnumerable<Category> Categories { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
@@ -25,5 +27,10 @@ namespace JobFly.Areas.Employer.Models
 
         [Required(ErrorMessage = "Category is required")]
         public int? CategoryId { get; set; }
+
+        public VacancyCreateViewModel()
+        {
+            Categories = Enumerable.Empty<Category>();
+        }
     }
 }

@@ -127,6 +127,10 @@ namespace JobFly.Areas.Identity.Pages.Account
                     {
                         return RedirectToAction("Index", "Dashboard", new { area = "Employee" });
                     }
+                    else if (roles.Contains("Admin"))
+                    {
+                        return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                    }
                     else
                     {
                         return RedirectToAction("Index", "Home");

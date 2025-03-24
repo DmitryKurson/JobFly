@@ -6,7 +6,7 @@ namespace JobFly.Areas.Employer.Models
 {
     public class VacancyCreateViewModel
     {
-        [BindNever] // <-- Ось це додай
+        [BindNever]
         public IEnumerable<Category> Categories { get; set; }
 
         [Required(ErrorMessage = "Title is required")]

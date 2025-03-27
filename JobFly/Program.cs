@@ -1,6 +1,7 @@
 using JobFly.Areas.Employer.Services;
 using JobFly.Data;
 using JobFly.Models;
+using JobFly.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ namespace JobFly
 
             builder.Services.AddScoped<IVacancyService, VacancyService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
             var app = builder.Build();
 
@@ -42,9 +44,6 @@ namespace JobFly
                 await ApplyMigrationsAsync(dbContext);
                 await SeedRolesAndAdminAsync(services);
             }
-
-           
-
             
             if (app.Environment.IsDevelopment())
             {

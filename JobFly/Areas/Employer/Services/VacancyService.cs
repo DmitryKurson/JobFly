@@ -150,5 +150,21 @@ namespace JobFly.Areas.Employer.Services
 
             return await query.CountAsync();
         }
+        public async Task<List<Application>> GetApplicationsForVacancy(int vacancyId)
+        {
+            var applications = await _db.Applications
+               .Where(a => a.VacancyId == vacancyId)
+               .Include(a => a.Employee)
+                   .ThenInclude(e => e.User)
+               .ToListAsync();
+
+            foreach (var app in applications)
+            {
+                Console.WriteLine($"ApplicationId: {app.Id}, EmployeeId: {app.EmployeeId}, Name: {app.Employee?.User?.Name}, Surname: {app.Employee?.User?.Surname}");
+            }
+
+            return applications; // Повертаємо вже отриманий список
+        }
+
     }
 }

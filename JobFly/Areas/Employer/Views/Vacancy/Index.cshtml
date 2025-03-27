@@ -57,6 +57,9 @@
             <td>@vacancy.Salary</td>
             <td>@vacancy.Category?.Title</td>
             <td>
+                <a asp-action="Details" asp-route-id="@vacancy.Id">Details</a>
+            </td>
+            <td>
                 <a asp-action="Update" asp-route-id="@vacancy.Id">Edit</a> 
             </td>
             <td>

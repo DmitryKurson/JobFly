@@ -74,11 +74,15 @@
             <div>
                 <strong>Company:</strong> @vacancy.Employer?.CompanyTitle
             </div>
-            <div>
-                <a asp-action="Details" asp-route-id="@vacancy.Id">View Details</a>
-            </div>
+
+            <!-- Форма для відправки POST-запиту -->
+            <form asp-action="Details" asp-controller="Vacancy" method="post">
+                <input type="hidden" name="vacancyId" value="@vacancy.Id" />
+                <button type="submit">Apply Now</button>
+            </form>
         </div>
     }
+
 </div>
 
 <div class="pagination">

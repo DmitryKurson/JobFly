@@ -1,5 +1,9 @@
-﻿using JobFly.Areas.Employer.Services;
+﻿using JobFly.Areas.Employer.Models;
+using JobFly.Areas.Employer.Services;
+using JobFly.Models;
+using JobFly.Services;
 using JobFly.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +14,13 @@ namespace JobFly.Areas.Employee.Controllers
     {
         private readonly IVacancyService _vacancyService;
         private readonly ICategoryService _categoryService;
-        private const int PageSize = 3;
-        public VacancyController(IVacancyService vacancyService, ICategoryService categoryService)
+        private readonly IApplicationService _applicationService;
+        private const int PageSize = 10;
+        public VacancyController(IVacancyService vacancyService, ICategoryService categoryService, IApplicationService applicationService)
         {
             _vacancyService = vacancyService;
             _categoryService = categoryService;
+            _applicationService = applicationService;
         }
         public async Task<IActionResult> Index(string title, int? categoryId, int page = 1, VacancySortState sortOrder = VacancySortState.IdAsc)
         {
@@ -32,6 +38,32 @@ namespace JobFly.Areas.Employee.Controllers
 
             return View(viewModel);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Details(int vacancyId)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("Користувач не авторизований.");
+            }
+
+
+            var application = new Application
+            {
+                VacancyId = vacancyId,
+                EmployeeId = userId,
+                Status = "Not readed",
+                DateApplied = DateTime.Now
+            };
+
+            await _applicationService.Create(application);
+
+            return RedirectToAction("Index");
+        }
+
 
     }
 }

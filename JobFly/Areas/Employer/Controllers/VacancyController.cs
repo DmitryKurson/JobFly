@@ -2,6 +2,7 @@
 using JobFly.Areas.Employer.Services;
 using JobFly.Data;
 using JobFly.Models;
+
 using JobFly.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,12 +17,14 @@ namespace JobFly.Areas.Employer.Controllers
     {
         private readonly IVacancyService _vacancyService;
         private readonly ICategoryService _categoryService;
+        //private readonly IApplicationService _applicationService;
         private const int PageSize = 10;
 
         public VacancyController(IVacancyService vacancyService, ICategoryService categoryService)
         {
             _vacancyService = vacancyService;
             _categoryService = categoryService;
+            //_applicationService = applicationService;
         }
 
         [Authorize]
@@ -39,16 +42,6 @@ namespace JobFly.Areas.Employer.Controllers
         [Authorize]
         public async Task<IActionResult> Create(VacancyCreateViewModel model)
         {
-            foreach (var kvp in ModelState)
-            {
-                var key = kvp.Key;
-                var state = kvp.Value;
-                foreach (var error in state.Errors)
-                {
-                    Console.WriteLine($"Key: {key} - Error: {error.ErrorMessage}");
-                }
-            }
-
             if (!ModelState.IsValid)
             {
                 model.Categories = await _categoryService.GetAll();
@@ -111,6 +104,19 @@ namespace JobFly.Areas.Employer.Controllers
             return View(viewModel);
         }
 
+        [Authorize]
+        public async Task<IActionResult> Details(int id)
+        {
+            if (id != null)
+            {
+                //var vacancy = await _vacancyService.GetVacancyById(id.Value);
+                var applications = await _vacancyService.GetApplicationsForVacancy(id);
+                return View(applications);
+
+            }
+            return NotFound();
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Update(VacancyUpdateViewModel model)
@@ -153,7 +159,8 @@ namespace JobFly.Areas.Employer.Controllers
                 new PageViewModel(count, page, PageSize),
                 new FilterViewModel(title, categories, categoryId),
                 new VacancySortViewModel(sortOrder),
-                categories // Передаємо список категорій
+                categories
+
             );
 
             return View(viewModel);

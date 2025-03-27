@@ -13,6 +13,6 @@ namespace JobFly.Areas.Employer.Services
         Task Delete(int? id);
         Task<List<Vacancy>> GetVacanciesForEmployer(string employerId, string title, int? categoryId, VacancySortState sortOrder, int page, int pageSize);
         Task<int> GetVacanciesCountForEmployer(string employerId, string? title, int? categoryId);
-
+        Task<List<Application>> GetApplicationsForVacancy(int vacancyId);
     }
 }

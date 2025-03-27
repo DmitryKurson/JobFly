@@ -1,0 +1,28 @@
+﻿@using JobFly.Models
+
+<h1>Applications for Vacancy</h1>
+
+@if (Model == null)
+{
+    <p>No applications found for this vacancy.</p>
+}
+else
+{
+    <table>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone Number</th>
+            <th>Date</th>
+        </tr>
+        @foreach (var application in Model)
+        {
+            <tr>
+                <td>@application.Employee?.User.Name</td>
+                <td>@application.Employee?.User.Surname</td>
+                <td>@application.Employee?.User.PhoneNumber</td>
+                <th>@application.DateApplied</th>
+            </tr>
+        }
+    </table>
+}

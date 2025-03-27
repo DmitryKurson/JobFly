@@ -65,20 +65,22 @@ namespace JobFly.Areas.Admin.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index(string title, int page = 1, ViewModels.CategorySortState sortOrder = CategorySortState.IdAsc)
+        public async Task<IActionResult> Index(string title, int? categoryId, int page = 1, CategorySortState sortOrder = CategorySortState.IdAsc)
         {
-            var vacancies = await _categoryService.GetCategories(title, sortOrder, page, PageSize);
+            var categories = await _categoryService.GetAll(); // Отримуємо всі категорії
+            var filteredCategories = await _categoryService.GetCategories(title, sortOrder, page, PageSize);
             var count = await _categoryService.GetCategoriesCount(title);
 
             CategoryIndexViewModel viewModel = new CategoryIndexViewModel(
-                vacancies,
+                filteredCategories,
                 new PageViewModel(count, page, PageSize),
-                new FilterViewModel(title),
+                new FilterViewModel(title, categories, categoryId),
                 new CategorySortViewModel(sortOrder)
             );
 
             return View(viewModel);
         }
+
 
         //[Authorize]
         //public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)

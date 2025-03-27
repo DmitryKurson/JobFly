@@ -16,24 +16,29 @@ namespace JobFly.Areas.Admin.Controllers
     public class VacancyController : Controller
     {
         private readonly IVacancyService _vacancyService;
+        private readonly ICategoryService _categoryService;
         private const int PageSize = 3;
 
         public VacancyController(IVacancyService vacancyService, ICategoryService categoryService)
         {
-            _vacancyService = vacancyService;           
+            _vacancyService = vacancyService;
+            _categoryService = categoryService;
         }
 
-        public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
+        public async Task<IActionResult> Index(string title, int? categoryId, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
         {
-            var vacancies = await _vacancyService.GetVacancies(title, sortOrder, page, PageSize);
-            var count = await _vacancyService.GetVacanciesCount(title);
+            var vacancies = await _vacancyService.GetVacancies(title, categoryId, sortOrder, page, PageSize);
+            var count = await _vacancyService.GetVacanciesCount(title, categoryId);
+            var categories = await _categoryService.GetAll();
 
-            VacancyIndexViewModel viewModel = new VacancyIndexViewModel(
+            var viewModel = new VacancyIndexViewModel(
                 vacancies,
                 new PageViewModel(count, page, PageSize),
-                new FilterViewModel(title),
-                new VacancySortViewModel(sortOrder)
+                new FilterViewModel(title, categories, categoryId),
+                new VacancySortViewModel(sortOrder),
+                categories
             );
+
 
             return View(viewModel);
         }

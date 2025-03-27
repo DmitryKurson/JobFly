@@ -136,24 +136,29 @@ namespace JobFly.Areas.Employer.Controllers
 
             return RedirectToAction("Index");
         }
-
         [Authorize]
-        public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
+        public async Task<IActionResult> Index(string title, int page = 1, int? categoryId = null,
+    ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
         {
             var employerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-            var vacancies = await _vacancyService.GetVacanciesForEmployer(employerId, title, sortOrder, page, PageSize);
-            var count = await _vacancyService.GetVacanciesCountForEmployer(employerId, title);
+            var vacancies = await _vacancyService.GetVacanciesForEmployer(employerId, title, categoryId, sortOrder, page, PageSize);
+            var count = await _vacancyService.GetVacanciesCountForEmployer(employerId, title, categoryId);
+
+            // Отримуємо список всіх категорій
+            var categories = await _categoryService.GetAll();
 
             VacancyIndexViewModel viewModel = new VacancyIndexViewModel(
                 vacancies,
                 new PageViewModel(count, page, PageSize),
-                new FilterViewModel(title),
-                new VacancySortViewModel(sortOrder)
+                new FilterViewModel(title, categories, categoryId),
+                new VacancySortViewModel(sortOrder),
+                categories // Передаємо список категорій
             );
 
             return View(viewModel);
         }
+
 
     }
 }

@@ -20,6 +20,18 @@
 <form method="get">
     <label>Title: </label>
     <input name="title" value="@Model.FilterViewModel.SelectedTitle" />
+
+    <label>Category: </label>
+    <select name="categoryId">
+        <option value="">All</option>
+        @foreach (var category in Model.FilterViewModel.Categories)
+        {
+            <option value="@category.Id" selected="@(category.Id == Model.FilterViewModel.SelectedCategoryId)">
+                @category.Title
+            </option>
+        }
+    </select>
+
     <input type="submit" value="Filter" />
 </form>
 

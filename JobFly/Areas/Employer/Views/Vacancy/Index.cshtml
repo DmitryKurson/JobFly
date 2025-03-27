@@ -15,48 +15,36 @@
     }
 </style>
 
-<h1>List of your vacancies</h1>
 
-<p><a asp-action="Create">Add vacancy</a></p>
+<h1>Your Vacancies</h1>
 
 <form method="get">
     <label>Title: </label>
     <input name="title" value="@Model.FilterViewModel.SelectedTitle" />
+
+    <label>Category: </label>
+    <select name="categoryId">
+        <option value="">All</option>
+        @foreach (var category in Model.FilterViewModel.Categories)
+        {
+            <option value="@category.Id" selected="@(category.Id == Model.FilterViewModel.SelectedCategoryId)">
+                @category.Title
+            </option>
+        }
+    </select>
+
     <input type="submit" value="Filter" />
 </form>
 
 <table>
     <tr>
-        <th>
-            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.IDSort)"
-               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">ID</a>
-        </th>
-        <th>
-            <a asp-action="Index"
-               asp-route-sortOrder="@(Model.VacancySortViewModel.TitleSort)"
-               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Title</a>
-        </th>
-        <th>
-            Task Description
-        </th>
-        <th>
-            Must to have
-        </th>
-        <th>
-            Good to have
-        </th>
-        <th>
-            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.SalarySort)"
-               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Salary</a>
-        </th>
-        <th>
-            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.StatusSort)"
-               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">IsActive</a>
-        </th>
-        <th>
-            <a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.CategorySort)"
-               asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Category</a>
-        </th>
+        <th><a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.IDSort)" asp-route-title="@Model.FilterViewModel.SelectedTitle">ID</a></th>
+        <th><a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.TitleSort)" asp-route-title="@Model.FilterViewModel.SelectedTitle">Title</a></th>
+        <th>Task Description</th>
+        <th>Must to have</th>
+        <th>Good to have</th>
+        <th><a asp-action="Index" asp-route-sortOrder="@(Model.VacancySortViewModel.SalarySort)" asp-route-title="@Model.FilterViewModel.SelectedTitle">Salary</a></th>
+        <th>Category</th>      
     </tr>
     @foreach (var vacancy in Model.Vacancies)
     {
@@ -67,11 +55,9 @@
             <td>@vacancy.MustToHave</td>
             <td>@vacancy.GoodToHave</td>
             <td>@vacancy.Salary</td>
-            <td>@vacancy.IsActive</td>
             <td>@vacancy.Category?.Title</td>
-
             <td>
-                <a asp-action="Update" asp-controller="Vacancy" asp-route-id="@vacancy.Id">Edit</a>
+                <a asp-action="Update" asp-route-id="@vacancy.Id">Edit</a> 
             </td>
             <td>
                 <form asp-controller="Vacancy" asp-action="Delete" method="post" asp-route-id="@vacancy.Id">
@@ -87,20 +73,14 @@
     {
         <a asp-action="Index"
            asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
-           asp-route-sortorder="@(Model.VacancySortViewModel.Current)"
-           class="glyphicon glyphicon-chevron-left">
-            Back
-        </a>
+           asp-route-title="@Model.FilterViewModel.SelectedTitle"
+           asp-route-sortorder="@Model.VacancySortViewModel.Current">Back</a>
     }
     @if (Model.PageViewModel.HasNextPage)
     {
         <a asp-action="Index"
            asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-           asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
-           asp-route-sortorder="@(Model.VacancySortViewModel.Current)"
-           class="glyphicon glyphicon-chevron-right">
-            Next
-        </a>
+           asp-route-title="@Model.FilterViewModel.SelectedTitle"
+           asp-route-sortorder="@Model.VacancySortViewModel.Current">Next</a>
     }
 </p>

@@ -16,7 +16,7 @@ namespace JobFly.Areas.Employer.Controllers
     {
         private readonly IVacancyService _vacancyService;
         private readonly ICategoryService _categoryService;
-        private const int PageSize = 3;
+        private const int PageSize = 10;
 
         public VacancyController(IVacancyService vacancyService, ICategoryService categoryService)
         {

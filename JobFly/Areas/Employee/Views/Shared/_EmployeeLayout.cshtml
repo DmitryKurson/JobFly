@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; // або будь-який твій основний layout
+}
+
+@if (User.IsInRole("Employee"))
+{ 
+    @section EmployeeMenu {
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Employee" asp-controller="Vacancy" asp-action="Index">Vacancies</a>
+    </li>
+@*     <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Employer" asp-controller="Vacancy" asp-action="Create">Create vacancy</a>
+    </li> *@
+    }
+}
+
+<div class="container mt-4">
+    @await RenderSectionAsync("Scripts", required: false)
+    @RenderBody()
+</div>

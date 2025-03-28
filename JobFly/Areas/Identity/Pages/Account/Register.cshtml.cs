@@ -113,12 +113,16 @@ namespace JobFly.Areas.Identity.Pages.Account
             public string Role { get; set; }
 
             [Required]
-            [Display(Name = "Ім'я")]
+            [Display(Name = "Name")]
             public string Name { get; set; }
 
             [Required]
-            [Display(Name = "Прізвище")]
+            [Display(Name = "Surname")]
             public string Surname { get; set; }
+
+            [Required(ErrorMessage = "Phone number")]
+            [RegularExpression(@"^\+38\d{3}-\d{3}-\d{2}-\d{2}$", ErrorMessage = "Format: +38XXX-XXX-XX-XX")]
+            public string PhoneNumber { get; set; } = string.Empty;
 
             // Специфічне для Employee
             [Display(Name = "Resume")]

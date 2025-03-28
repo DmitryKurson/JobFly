@@ -6,41 +6,67 @@
 
 <h1>@ViewData["Title"]</h1>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let phoneInput = document.getElementById("phoneInput");
+
+        phoneInput.addEventListener("input", function (e) {
+            let value = phoneInput.value.replace(/\D/g, ""); // Убираем все нецифры
+            let formatted = "+38";
+
+            if (value.length > 2) formatted += value.substring(2, 5);
+            if (value.length > 5) formatted += "-" + value.substring(5, 8);
+            if (value.length > 8) formatted += "-" + value.substring(8, 10);
+            if (value.length > 10) formatted += "-" + value.substring(10, 12);
+
+            phoneInput.value = formatted;
+        });
+    });
+</script>
+
+
 <div class="row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Створити обліковий запис</h2>
+            <h2>Create an account</h2>
             <hr />
             <div class="form-floating mb-3">
-                <label asp-for="Input.Name"></label>
-                <input asp-for="Input.Name" class="form-control" />
+                <input asp-for="Input.Name" class="form-control" placeholder="Enter your name" />
+                <label asp-for="Input.Name">Name</label>
                 <span asp-validation-for="Input.Name" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-3">
-                <label asp-for="Input.Surname"></label>
-                <input asp-for="Input.Surname" class="form-control" />
+                <input asp-for="Input.Surname" class="form-control" placeholder="Enter your surname" />
+                <label asp-for="Input.Surname">Surname</label>
                 <span asp-validation-for="Input.Surname" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-3">
+                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="(+38)XXX-XXX-XX-XX" id="phoneInput" />
+                <label asp-for="Input.PhoneNumber">Phone Number</label>
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-floating mb-3">
                 <select asp-for="Input.Role" class="form-control" id="roleSelector">
-                    <option value="">Оберіть роль</option>
-                    <option value="Employee">Я пошукач, шукаю роботу</option>
-                    <option value="Employer">Я роботодавець, шукаю робітників</option>
+                    <option value="">Choose the role</option>
+                    <option value="Employee">I am employee</option>
+                    <option value="Employer">I am employer</option>
                 </select>
                 <span asp-validation-for="Input.Role" class="text-danger"></span>
             </div>
 
             <!-- Динамічні поля -->
             <div class="form-floating mb-3" id="employerField" style="display:none;">
-                <label asp-for="Input.CompanyTitle">Назва компанії</label>
+                <label asp-for="Input.CompanyTitle">Company name</label>
                 <input asp-for="Input.CompanyTitle" class="form-control" />
                 <span asp-validation-for="Input.CompanyTitle" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-3" id="employeeField" style="display:none;">
-                <label asp-for="Input.ResumeText">Текст резюме</label>
+                <label asp-for="Input.ResumeText">Resume text</label>
                 <textarea asp-for="Input.ResumeText" class="form-control"></textarea>
                 <span asp-validation-for="Input.ResumeText" class="text-danger"></span>
             </div>
@@ -64,37 +90,7 @@
             </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @if ((Model.ExternalLogins?.Count ?? 0) == 0)
-            {
-                <div>
-                    <p>
-                        There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
-                            article
-                            about setting up this ASP.NET application to support logging in via external services
-                        </a>.
-                    </p>
-                </div>
-            }
-            else
-            {
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                    <div>
-                        <p>
-                            @foreach (var provider in Model.ExternalLogins!)
-                            {
-                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                            }
-                        </p>
-                    </div>
-                </form>
-            }
-        </section>
-    </div>
+    </div> 
 </div>
 
 @section Scripts {

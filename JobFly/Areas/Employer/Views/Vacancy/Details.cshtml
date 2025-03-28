@@ -12,7 +12,9 @@ else
         <tr>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Email</th>
             <th>Phone Number</th>
+            <th>Resume</th>
             <th>Date</th>
         </tr>
         @foreach (var application in Model)
@@ -20,7 +22,9 @@ else
             <tr>
                 <td>@application.Employee?.User.Name</td>
                 <td>@application.Employee?.User.Surname</td>
+                <td>@application.Employee?.User.Email</td>
                 <td>@application.Employee?.User.PhoneNumber</td>
+                <td>@application.Employee?.ResumeText</td>
                 <th>@application.DateApplied</th>
             </tr>
         }

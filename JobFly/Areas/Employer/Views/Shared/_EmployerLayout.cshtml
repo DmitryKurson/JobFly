@@ -11,6 +11,9 @@
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Employer" asp-controller="Vacancy" asp-action="Create">Create vacancy</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Employer" asp-controller="Dashboard" asp-action="Help">Help me</a>
+    </li>
     }
 }
 
@@ -18,3 +21,9 @@
     @await RenderSectionAsync("Scripts", required: false)
     @RenderBody()
 </div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2025 - EMPLOYERJobFly - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>

@@ -13,7 +13,7 @@ namespace JobFly.Areas.Admin.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-        private const int PageSize = 3;
+        private const int PageSize = 10;
 
         public UserController(IUserService userService)
         {

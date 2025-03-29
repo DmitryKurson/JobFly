@@ -14,5 +14,10 @@ namespace JobFly.Areas.Employer.Controllers
         {
             return View();
         }
+
+        public IActionResult Help()
+        {
+            return View();
+        }
     }
 }

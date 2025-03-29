@@ -9,17 +9,17 @@
     </p>
     <p>
         <label asp-for="TaskDescription">Task Description</label><br />
-        <input type="text" asp-for="TaskDescription" />
+        <textarea asp-for="TaskDescription" class="form-control" placeholder="Enter what tasks your potential employee will solve, what he will encounter during the work process"></textarea>
         <span asp-validation-for="TaskDescription" class="text-danger"></span>
     </p>
     <p>
         <label asp-for="MustToHave">Must to have</label><br />
-        <input type="text" asp-for="MustToHave" />
+        <textarea asp-for="MustToHave" class="form-control" placeholder="Enter what obligatory skills your potential employee must to have"></textarea>
         <span asp-validation-for="MustToHave" class="text-danger"></span>
     </p>
     <p>
         <label asp-for="GoodToHave">Good to have</label><br />
-        <input type="text" asp-for="GoodToHave" />
+        <textarea asp-for="GoodToHave" class="form-control" placeholder="Enter what desirable skills your potential employee should have"></textarea>
         <span asp-validation-for="GoodToHave" class="text-danger"></span>
     </p>
     <p>

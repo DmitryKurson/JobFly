@@ -17,7 +17,7 @@ namespace JobFly.Areas.Employer.Services
         public async Task<IEnumerable<Category>> GetAll()
         {
             return await _db.Categories
-                .OrderBy(c => c.Title) // Наприклад, сортуючи по назві
+                .OrderBy(c => c.Title) 
                 .ToListAsync();
         }
 
@@ -35,11 +35,7 @@ namespace JobFly.Areas.Employer.Services
                 CategorySortState.IdAsc => categories.OrderBy(s => s.Id),
                 CategorySortState.IdDesc => categories.OrderByDescending(s => s.Id),
                 CategorySortState.TitleAsc => categories.OrderBy(s => s.Title),
-                CategorySortState.TitleDesc => categories.OrderByDescending(s => s.Title),
-                //VacancySortState.SalaryAsc => categories.OrderBy(s => s.Salary),
-                //VacancySortState.SalaryDesc => categories.OrderByDescending(s => s.Salary),
-                //VacancySortState.StatusAsc => categories.OrderBy(s => s.Status),
-                //VacancySortState.StatusDesc => categories.OrderByDescending(s => s.Status),
+                CategorySortState.TitleDesc => categories.OrderByDescending(s => s.Title),               
                 _ => categories.OrderBy(s => s.Id),
             };
 
@@ -48,14 +44,14 @@ namespace JobFly.Areas.Employer.Services
 
         public async Task<int> GetCategoriesCount(string? title)
         {
-            IQueryable<Vacancy> projects = _db.Vacancies;
+            IQueryable<Category> categories = _db.Categories;
 
             if (!string.IsNullOrEmpty(title))
             {
-                projects = projects.Where(p => p.Title!.Contains(title));
+                categories = categories.Where(p => p.Title!.Contains(title));
             }
 
-            return await projects.CountAsync();
+            return await categories.CountAsync();
         }
 
         public async Task<Category?> GetCategoryById(int? id)

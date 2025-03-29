@@ -11,7 +11,7 @@ namespace JobFly.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
-        private const int PageSize = 3;
+        private const int PageSize = 10;
 
         public CategoryController(ICategoryService categoryService)
         {
@@ -67,11 +67,11 @@ namespace JobFly.Areas.Admin.Controllers
         [Authorize]
         public async Task<IActionResult> Index(string title, int? categoryId, int page = 1, CategorySortState sortOrder = CategorySortState.IdAsc)
         {
-            var categories = await _categoryService.GetAll(); // Отримуємо всі категорії
+            var categories = await _categoryService.GetAll();
             var filteredCategories = await _categoryService.GetCategories(title, sortOrder, page, PageSize);
             var count = await _categoryService.GetCategoriesCount(title);
 
-            CategoryIndexViewModel viewModel = new CategoryIndexViewModel(
+            var viewModel = new CategoryIndexViewModel(
                 filteredCategories,
                 new PageViewModel(count, page, PageSize),
                 new FilterViewModel(title, categories, categoryId),
@@ -80,25 +80,5 @@ namespace JobFly.Areas.Admin.Controllers
 
             return View(viewModel);
         }
-
-
-        //[Authorize]
-        //public async Task<IActionResult> Index(string title, int page = 1, ViewModels.VacancySortState sortOrder = VacancySortState.IdAsc)
-        //{
-        //    var employerId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
-        //    var vacancies = await _categoryService.GetVacanciesForEmployer(employerId, title, sortOrder, page, PageSize);
-        //    var count = await _categoryService.GetVacanciesCountForEmployer(employerId, title);
-
-        //    VacancyIndexViewModel viewModel = new VacancyIndexViewModel(
-        //        vacancies,
-        //        new PageViewModel(count, page, PageSize),
-        //        new FilterViewModel(title),
-        //        new VacancySortViewModel(sortOrder)
-        //    );
-
-        //    return View(viewModel);
-        //}
-
     }
 }

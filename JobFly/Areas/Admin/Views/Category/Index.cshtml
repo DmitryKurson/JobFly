@@ -21,9 +21,10 @@
 
 <form method="get">
     <label>Title: </label>
-    <input title="title" value="@Model.FilterViewModel.SelectedTitle" />
-    <input type="submit" value="Filter" />
+    <input type="text" name="title" value="@Model.FilterViewModel.SelectedTitle" placeholder="Enter category title" />
+    <p></p><input type="submit" value="Filter" class="btn btn-primary" />
 </form>
+
 
 <table>
     <tr>
@@ -58,19 +59,19 @@
     {
         <a asp-action="Index"
            asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
+           asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
            asp-route-sortorder="@(Model.CategorySortViewModel.Current)"
            class="glyphicon glyphicon-chevron-left">
-             Back
+            Back
         </a>
     }
     @if (Model.PageViewModel.HasNextPage)
     {
         <a asp-action="Index"
-           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
-           asp-route-sortorder="@(Model.CategorySortViewModel.Current)"
-           class="glyphicon glyphicon-chevron-right">
+            asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+            asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
+            asp-route-sortorder="@(Model.CategorySortViewModel.Current)"
+            class="glyphicon glyphicon-chevron-right">
             Next
         </a>
     }

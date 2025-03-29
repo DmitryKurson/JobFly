@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JobFly.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public class VacancyController : Controller
     {
         private readonly IVacancyService _vacancyService;

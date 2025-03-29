@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JobFly.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

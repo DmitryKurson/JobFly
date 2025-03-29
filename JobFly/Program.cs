@@ -17,11 +17,20 @@ namespace JobFly
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
+            // Реєструємо політики авторизації **до** builder.Build()
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("EmployerOnly", policy => policy.RequireRole("Employer"));
+                options.AddPolicy("EmployeeOnly", policy => policy.RequireRole("Employee"));
+            });
+
+            // Підключення до бази даних
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             // Identity
@@ -29,7 +38,7 @@ namespace JobFly
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
+            // Реєстрація сервісів
             builder.Services.AddScoped<IVacancyService, VacancyService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IApplicationService, ApplicationService>();
@@ -37,16 +46,16 @@ namespace JobFly
 
             var app = builder.Build();
 
-           
+            // Виконуємо міграції та ініціалізуємо ролі/адміна
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-
                 var dbContext = services.GetRequiredService<ApplicationDbContext>();
                 await ApplyMigrationsAsync(dbContext);
                 await SeedRolesAndAdminAsync(services);
             }
-            
+
+            // Обробка помилок
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
@@ -57,32 +66,31 @@ namespace JobFly
                 app.UseHsts();
             }
 
+            // Налаштування middleware
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // Маршрутизація
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-            
             app.MapRazorPages();
+
+            // Перевірка UserManager (краще використовувати `GetRequiredService`)
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-    
-                var userManager = services.GetService<UserManager<ApplicationUser>>();
-                if (userManager == null)
-                {
-                    throw new Exception("UserManager<ApplicationUser> �� ��������������� � DI!");
-                }
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
             }
-            
+
             app.Run();
+
         }
 
         private static async Task ApplyMigrationsAsync(ApplicationDbContext dbContext)

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JobFly.Areas.Employee.Controllers
 {
     [Area("Employee")]
+    [Authorize(Policy = "EmployeeOnly")]
     public class VacancyController : Controller
     {
         private readonly IVacancyService _vacancyService;

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JobFly.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;

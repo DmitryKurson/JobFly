@@ -1,3 +1,4 @@
+using JobFly.Areas.Admin.Services;
 using JobFly.Areas.Employer.Services;
 using JobFly.Data;
 using JobFly.Models;
@@ -32,6 +33,7 @@ namespace JobFly
             builder.Services.AddScoped<IVacancyService, VacancyService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IApplicationService, ApplicationService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 

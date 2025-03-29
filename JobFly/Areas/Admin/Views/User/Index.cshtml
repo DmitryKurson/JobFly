@@ -1,0 +1,70 @@
+﻿@model JobFly.ViewModels.UserIndexViewModel
+
+@{
+    ViewData["Title"] = "Users Management";
+}
+
+<h2>Users Management</h2>
+
+<form method="get">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" name="search" value="@Model.UserFilterViewModel.Search" class="form-control" placeholder="Search by name or email" />
+        </div>
+        <div class="col-md-4">
+            <select name="role" class="form-control">
+                <option value="">All</option>
+                <option value="Employee" selected="@(Model.UserFilterViewModel.Role == "Employee" ? "selected" : null)">Employees</option>
+                <option value="Employer" selected="@(Model.UserFilterViewModel.Role == "Employer" ? "selected" : null)">Employers</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (var i = 0; i < Model.Users.Count(); i++)
+        {
+            var user = Model.Users.ElementAt(i);
+            var role = Model.Roles[i]; // Получаем роль из списка
+
+            <tr>
+                <td>@user.Name @user.Surname</td>
+                <td>@user.Email</td>
+                <td>@role</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-name="@(Model.UserFilterViewModel.Search)"
+           asp-route-role="@(Model.UserFilterViewModel.Role)"
+           class="glyphicon glyphicon-chevron-left">
+            Back
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-name="@(Model.UserFilterViewModel.Search)"
+           asp-route-role="@(Model.UserFilterViewModel.Role)"
+           class="glyphicon glyphicon-chevron-right">
+            Next
+        </a>
+    }
+</p>
